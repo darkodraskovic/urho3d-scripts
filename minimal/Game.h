@@ -20,9 +20,8 @@ public:
     virtual void Start();
     virtual void Stop();
 
-    void HandleKeyDown(StringHash eventType, VariantMap& eventData);
-
 private:
+    void HandleKeyDown(StringHash eventType, VariantMap& eventData);    
     void HandleUpdate(StringHash eventType, VariantMap& eventData);    
 };
 

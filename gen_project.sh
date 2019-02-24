@@ -3,13 +3,13 @@ if [[ -z "$URHO3D_HOME" ]]; then
     URHO3D_HOME=~/Programs/Urho3D
 fi
 
-PROJECT_TYPE="minimal"
+PROJECT_TEMPLATE="minimal"
 CMAKE=cmake_codelite.sh
 
 while getopts "t:d:e:n:c:u:" opt; do
     case $opt in
         t)
-            PROJECT_TYPE=$OPTARG
+            PROJECT_TEMPLATE=$OPTARG
             ;;
         d)
             PROJECT_DIR=$OPTARG
@@ -27,7 +27,7 @@ while getopts "t:d:e:n:c:u:" opt; do
             CMAKE=cmake_${OPTARG}.sh
             ;;        
         \?)
-            echo "script usage: $(basename $0) -n name [-t type] [-d dir] [-e exec] [-u urho3d] [-c cmake]" >&2
+            echo "script usage: $(basename $0) -n name [-t template] [-d dir] [-e exec] [-u urho3d] [-c cmake]" >&2
             exit 1
             ;;
         :)
@@ -61,6 +61,6 @@ cp CMakeLists.txt $PROJECT_DIR/
 sed -i 's/MyProjectName/'$PROJECT_NAME'/g' $PROJECT_DIR/CMakeLists.txt
 sed -i 's/MyExecutableName/'$PROJECT_EXEC'/g' $PROJECT_DIR/CMakeLists.txt
 
-cp $PROJECT_TYPE/* $PROJECT_DIR/
+cp $PROJECT_TEMPLATE/* $PROJECT_DIR/
 
 ${PROJECT_DIR}/script/$CMAKE ${PROJECT_DIR}

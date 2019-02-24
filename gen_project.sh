@@ -24,7 +24,7 @@ while getopts "t:d:e:n:c:u:" opt; do
             URHO3D_HOME=$OPTARG
             ;;        
         c)
-            CMAKE=cmake_${OPTARG}.sh
+            CMAKE="cmake_${OPTARG}.sh"
             ;;        
         \?)
             echo "script usage: $(basename $0) -n name [-t template] [-d dir] [-e exec] [-u urho3d] [-c cmake]" >&2
@@ -63,4 +63,9 @@ sed -i 's/MyExecutableName/'$PROJECT_EXEC'/g' $PROJECT_DIR/CMakeLists.txt
 
 cp $PROJECT_TEMPLATE/* $PROJECT_DIR/
 
-${PROJECT_DIR}/script/$CMAKE ${PROJECT_DIR}
+$PROJECT_DIR/script/$CMAKE $PROJECT_DIR
+
+if [ $CMAKE == "cmake_generic.sh" ]
+then
+    cmake $PROJECT_DIR -DCMAKE_EXPORT_COMPILE_COMMANDS=1
+fi

@@ -4,7 +4,7 @@ if [[ -z "$URHO3D_HOME" ]]; then
 fi
 
 PROJECT_TEMPLATE="minimal"
-CMAKE=cmake_codelite.sh
+CMAKE=cmake_generic.sh
 
 while getopts "t:d:e:n:c:u:" opt; do
     case $opt in
@@ -64,6 +64,7 @@ sed -i 's/MyExecutableName/'$PROJECT_EXEC'/g' $PROJECT_DIR/CMakeLists.txt
 cp $PROJECT_TEMPLATE/* $PROJECT_DIR/
 
 $PROJECT_DIR/script/$CMAKE $PROJECT_DIR
+# $PROJECT_DIR/script/$CMAKE $PROJECT_DIR -DURHO3D_CLANG_TOOLS=1 
 
 if [ $CMAKE == "cmake_generic.sh" ]
 then

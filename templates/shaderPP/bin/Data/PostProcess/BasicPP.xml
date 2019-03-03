@@ -1,0 +1,5 @@
+<renderpath>
+    <command type="quad" tag="BasicPP" vs="BasicPP" ps="BasicPP" output="viewport">
+        <texture unit="diffuse" name="viewport" />
+    </command>
+</renderpath>

@@ -3,13 +3,18 @@ if [[ -z "$URHO3D_HOME" ]]; then
     URHO3D_HOME=~/Programs/Urho3D
 fi
 
-PROJECT_TEMPLATE="minimal"
+# Const vals
+PROJECTS_DIR="projects"
+TEMPLATES_DIR="templates"
+
+# Default options
+TEMPLATE_DIR="minimal"
 CMAKE=cmake_generic.sh
 
 while getopts "t:d:e:n:c:u:" opt; do
     case $opt in
         t)
-            PROJECT_TEMPLATE=$OPTARG
+            TEMPLATE_DIR=$OPTARG
             ;;
         d)
             PROJECT_DIR=$OPTARG
@@ -50,23 +55,37 @@ fi
 
 PROJECT_EXEC=$PROJECT_NAME
 
+PROJECT_DIR=$PROJECTS_DIR/$PROJECT_DIR
 mkdir -p $PROJECT_DIR/bin
 
 cp -r $URHO3D_HOME/bin/CoreData/ $PROJECT_DIR/bin
 cp -r $URHO3D_HOME/bin/Data/ $PROJECT_DIR/bin
-ln -s $URHO3D_HOME/CMake $PROJECT_DIR/
-ln -s $URHO3D_HOME/script $PROJECT_DIR/
+cp -r $URHO3D_HOME/CMake $PROJECT_DIR/
+cp -r $URHO3D_HOME/script $PROJECT_DIR/
 
 cp CMakeLists.txt $PROJECT_DIR/
 sed -i 's/MyProjectName/'$PROJECT_NAME'/g' $PROJECT_DIR/CMakeLists.txt
 sed -i 's/MyExecutableName/'$PROJECT_EXEC'/g' $PROJECT_DIR/CMakeLists.txt
 
-cp $PROJECT_TEMPLATE/* $PROJECT_DIR/
+TEMPLATE_DIR=$TEMPLATES_DIR/$TEMPLATE_DIR
+cp $TEMPLATE_DIR/* $PROJECT_DIR/
 
 $PROJECT_DIR/script/$CMAKE $PROJECT_DIR
 # $PROJECT_DIR/script/$CMAKE $PROJECT_DIR -DURHO3D_CLANG_TOOLS=1 
 
+# Copy custom CoreData and Data
+CORE_DATA=bin/CoreData
+if [ -d $TEMPLATE_DIR/$CORE_DATA ]; then 
+    cp -r $TEMPLATE_DIR/$CORE_DATA/* $PROJECT_DIR/$CORE_DATA/
+fi
+DATA=bin/Data
+if [ -d $TEMPLATE_DIR/$DATA ]; then 
+    cp -r $TEMPLATE_DIR/$DATA/* $PROJECT_DIR/$DATA/
+fi
+
 if [ $CMAKE == "cmake_generic.sh" ]
 then
-    cmake $PROJECT_DIR -DCMAKE_EXPORT_COMPILE_COMMANDS=1
+    cd $PROJECT_DIR
+    make
+    cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
 fi

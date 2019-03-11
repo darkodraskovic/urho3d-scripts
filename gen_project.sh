@@ -68,20 +68,20 @@ sed -i 's/MyProjectName/'$PROJECT_NAME'/g' $PROJECT_DIR/CMakeLists.txt
 sed -i 's/MyExecutableName/'$PROJECT_EXEC'/g' $PROJECT_DIR/CMakeLists.txt
 
 TEMPLATE_DIR=$TEMPLATES_DIR/$TEMPLATE_DIR
-cp $TEMPLATE_DIR/* $PROJECT_DIR/
+cp -r $TEMPLATE_DIR/* $PROJECT_DIR/
 
 $PROJECT_DIR/script/$CMAKE $PROJECT_DIR
 # $PROJECT_DIR/script/$CMAKE $PROJECT_DIR -DURHO3D_CLANG_TOOLS=1 
 
 # Copy custom CoreData and Data
-CORE_DATA=bin/CoreData
-if [ -d $TEMPLATE_DIR/$CORE_DATA ]; then 
-    cp -r $TEMPLATE_DIR/$CORE_DATA/* $PROJECT_DIR/$CORE_DATA/
-fi
-DATA=bin/Data
-if [ -d $TEMPLATE_DIR/$DATA ]; then 
-    cp -r $TEMPLATE_DIR/$DATA/* $PROJECT_DIR/$DATA/
-fi
+# CORE_DATA=bin/CoreData
+# if [ -d $TEMPLATE_DIR/$CORE_DATA ]; then 
+#     cp -r $TEMPLATE_DIR/$CORE_DATA/* $PROJECT_DIR/$CORE_DATA/
+# fi
+# DATA=bin/Data
+# if [ -d $TEMPLATE_DIR/$DATA ]; then 
+#     cp -r $TEMPLATE_DIR/$DATA/* $PROJECT_DIR/$DATA/
+# fi
 
 if [ $CMAKE == "cmake_generic.sh" ]
 then

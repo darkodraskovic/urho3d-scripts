@@ -19,10 +19,6 @@ public:
     virtual void Setup() override;
     virtual void Start() override;
     virtual void Stop() override;
-
-private:
-    void HandleKeyDown(StringHash eventType, VariantMap& eventData);    
-    void HandleUpdate(StringHash eventType, VariantMap& eventData);    
 };
 
 #endif // #ifndef __GAME_H_

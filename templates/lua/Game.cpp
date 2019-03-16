@@ -20,9 +20,8 @@ void Game::Setup()
 
 void Game::Start()
 {
-    ResourceCache* cache = GetSubsystem<ResourceCache>();
-
-    cache->GetResource<LuaFile>("LuaScripts/05_AnimatingScene.lua");
+    // ResourceCache* cache = GetSubsystem<ResourceCache>();
+    // cache->GetResource<LuaFile>("LuaScripts/01_HelloWorld.lua");
 
     LuaScript* script = new LuaScript(context_);
     context_->RegisterSubsystem(script);

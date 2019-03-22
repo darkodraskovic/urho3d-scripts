@@ -24,9 +24,9 @@ class Game : public Application
 public:
     Game(Context* context);
 
-    virtual void Setup();
-    virtual void Start();
-    virtual void Stop();
+    virtual void Setup() override;
+    virtual void Start() override;
+    virtual void Stop() override;
 
 protected:
     /// Scene.
@@ -36,7 +36,7 @@ protected:
     
 private:
     void CreateScene();
-    void CreateGround();
+    void CreateStaticSprite();
     
     void SetupCamera();
     void SetupViewport();
@@ -45,6 +45,10 @@ private:
     
     void HandleKeyDown(StringHash eventType, VariantMap& eventData);
     void HandleUpdate(StringHash eventType, VariantMap& eventData);
+    void HandlePostRenderUpdate(StringHash eventType, VariantMap& eventData);
+
+    /// Flag for drawing debug geometry.
+    bool drawDebug_;
 };
 
 #endif // #ifndef __GAME_H_

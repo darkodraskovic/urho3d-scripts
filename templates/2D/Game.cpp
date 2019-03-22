@@ -1,5 +1,6 @@
 #include "Game.h"
 
+#include <Urho3D/Core/StringUtils.h>
 #include <Urho3D/Graphics/Octree.h>
 #include <Urho3D/Graphics/DebugRenderer.h>
 #include <Urho3D/Graphics/Graphics.h>
@@ -17,7 +18,7 @@
 using namespace Urho3D;
 
 Game::Game(Context* context):
-    Application(context)
+    Application(context), drawDebug_(false)
 {
 
 }
@@ -31,7 +32,7 @@ void Game::Start()
 {
     // Create the scene content
     CreateScene();
-    CreateGround();
+    CreateStaticSprite();
     
     // Setup the camera for displaying the scene
     SetupCamera();
@@ -41,6 +42,8 @@ void Game::Start()
     
     SubscribeToEvent(E_KEYDOWN, URHO3D_HANDLER(Game, HandleKeyDown));
     SubscribeToEvent(E_UPDATE, URHO3D_HANDLER(Game, HandleUpdate));
+
+    SubscribeToEvent(E_POSTRENDERUPDATE, URHO3D_HANDLER(Game, HandlePostRenderUpdate));    
 }
 
 void Game::CreateScene()
@@ -50,31 +53,33 @@ void Game::CreateScene()
     scene_->CreateComponent<DebugRenderer>();
 
     // Create 2D physics world component
-    /*PhysicsWorld2D* physicsWorld = */scene_->CreateComponent<PhysicsWorld2D>();
+    /*PhysicsWorld2D* physicsWorld = */
+    scene_->CreateComponent<PhysicsWorld2D>();
 }
 
-void Game::CreateGround()
+void Game::CreateStaticSprite()
 {
     auto* cache = GetSubsystem<ResourceCache>();
-    auto* boxSprite = cache->GetResource<Sprite2D>("Urho2D/Box.png");
+    auto* sprite = cache->GetResource<Sprite2D>("Urho2D/Box.png");
 
     // Create ground.
-    Node* groundNode = scene_->CreateChild("Ground");
-    groundNode->SetPosition(Vector3(0.0f, -3.0f, 0.0f));
-    groundNode->SetScale(Vector3(200.0f, 1.0f, 0.0f));
+    Node* node = scene_->CreateChild("Box");
+    // node->SetPosition(Vector3(0.0f, 0.0f, 0.0f));
+    // node->SetScale(Vector3(1.0f, 1.0f, 0.0f));
 
-    // Create 2D rigid body for gound
-    /*RigidBody2D* groundBody = */groundNode->CreateComponent<RigidBody2D>();
+    // Create 2D rigid body for box
+    /*RigidBody2D* body = */
+    node->CreateComponent<RigidBody2D>();
 
-    auto* groundSprite = groundNode->CreateComponent<StaticSprite2D>();
-    groundSprite->SetSprite(boxSprite);
+    auto* staticSprite = node->CreateComponent<StaticSprite2D>();
+    staticSprite->SetSprite(sprite);
 
-    // Create box collider for ground
-    auto* groundShape = groundNode->CreateComponent<CollisionBox2D>();
+    // Create box collider for box
+    auto* shape = node->CreateComponent<CollisionBox2D>();
     // Set box size
-    groundShape->SetSize(Vector2(0.32f, 0.32f));
+    shape->SetSize(Vector2(0.32f, 0.32f));
     // Set friction
-    groundShape->SetFriction(0.5f);    
+    shape->SetFriction(0.5f);    
 }
 
 void Game::Stop()
@@ -148,10 +153,16 @@ void Game::HandleKeyDown(StringHash eventType, VariantMap& eventData)
     int key = eventData[P_KEY].GetInt();
 
     if (key == KEY_ESCAPE)
-        {
-            engine_->Exit();
-        }
-
+    {
+        engine_->Exit();
+    }
+    
+    // Toggle physics debug geometry with space
+    if (key == KEY_SPACE)
+    {
+        PrintLine(ToString("%d", drawDebug_));
+        drawDebug_ = !drawDebug_;
+    }
 }
 
 void Game::HandleUpdate(StringHash eventType, VariantMap& eventData)
@@ -163,6 +174,15 @@ void Game::HandleUpdate(StringHash eventType, VariantMap& eventData)
 
     // Move the camera, scale movement with time step
     MoveCamera(timeStep);
+}
+
+void Game::HandlePostRenderUpdate(StringHash eventType, VariantMap& eventData)
+{
+    if (drawDebug_)
+    {
+        auto* physicsWorld = scene_->GetComponent<PhysicsWorld2D>();
+        physicsWorld->DrawDebugGeometry();
+    }
 }
 
 URHO3D_DEFINE_APPLICATION_MAIN(Game)

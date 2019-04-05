@@ -17,9 +17,9 @@ class Game : public Application
     public:
     Game(Context* context);
 
-    virtual void Setup();
-    virtual void Start();
-    virtual void Stop();
+    virtual void Setup() override;
+    virtual void Start() override;
+    virtual void Stop() override;
 
 private:
     void CreateScene();

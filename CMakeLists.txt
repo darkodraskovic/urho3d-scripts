@@ -30,3 +30,6 @@ define_source_files ()
 
 # Setup target with resource copying
 setup_main_executable ()
+
+# Generate compilation database
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)

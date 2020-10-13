@@ -1,3 +1,5 @@
+#!/bin/bash
+
 while getopts "n:t:p:" opt; do
     case $opt in
         n)
@@ -11,7 +13,7 @@ while getopts "n:t:p:" opt; do
             ;;
 	
         \?)
-            echo "script usage: $(basename $0) -n name" >&2
+            echo "script usage: $(basename $0) -n name -p proj_dir" >&2
             exit 1
             ;;
         :)
@@ -24,6 +26,12 @@ done
 if [ -z "$FACTORY_NAME" ]
 then
     echo "ERROR: The factory name not specified."
+    exit 1
+fi
+
+if [ -z "$PROJECT_NAME" ]
+then
+    echo "ERROR: The project dir not specified."
     exit 1
 fi
 
@@ -47,8 +55,4 @@ cp ${FACTORY_TYPE}.cpp $FACTORY_CPP
 sed -i 's/Factory/'$FACTORY_NAME'/g' $FACTORY_CPP
 
 # Copy to project
-
-if [ ! -z "$PROJECT_NAME" ]
-then
-    cp $FACTORY_H $FACTORY_CPP ../../projects/$PROJECT_NAME/
-fi
+mv $FACTORY_H $FACTORY_CPP ../../projects/$PROJECT_NAME/

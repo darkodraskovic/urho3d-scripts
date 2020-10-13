@@ -4,6 +4,7 @@
 #pragma once
 
 #include <Urho3D/Scene/LogicComponent.h>
+#include <Urho3D/Core/Context.h>
 
 // All Urho3D classes reside in namespace Urho3D
 using namespace Urho3D;
@@ -17,7 +18,8 @@ public:
     /// Construct.
     Factory (Context* context);
 
-    // Called when the component is added to a scene node. Other components may not yet exist. 
+    // Called when the component is added to a scene node.
+    // Other components may not yet exist.
     virtual void Start() override;
     
     /// Handle scene update. Called by LogicComponent base class.
